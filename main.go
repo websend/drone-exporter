@@ -102,6 +102,9 @@ func main() {
 func processRepo(repo *dronecli.Repo, lastBuildId int64) []types.Point {
 	var points []types.Point
 
+    log.Infof("Processing Repo %s " ,repo.Name)
+    log.Infof("following last buildId: %d" ,lastBuildId)
+
 	// process first page
 	page := 1
 	builds, err := cli.BuildList(repo.Namespace, repo.Name, dronecli.ListOptions{

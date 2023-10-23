@@ -1,6 +1,7 @@
 .idea
 drone-exporter
 docker-compose.*.yml
+.env
 env.*
 /.dapper
 /.cache
@@ -8,3 +9,4 @@ env.*
 /dist
 *.swp
 *.exe
+/ci/secret.yml
