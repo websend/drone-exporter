@@ -11,15 +11,7 @@ Docker image: quay.io/jlehtimaki/drone-exporter
 
 ## Supported Database Drivers
 List of supported backends for Grafana and which ones Drone Exporter currently supports.
-- [ ] Prometheus
-- [ ] Graphite
-- [ ] OpenTSDB
-- [x] InfluxDB
-- [ ] Loki
-- [ ] Elasticsearch
-- [ ] MySQL
-- [ ] PostgreSQL
-- [ ] MSSQL Server
+- [x] InfluxDB V2
 
 ### Schema
 
@@ -98,14 +90,37 @@ docker run -d -e DRONE_URL https://droneserver.xyz -e DRONE_TOKEN abcde12345 qua
 ```
 
 ## Environment Variables
-| Name          | Description               | Default               | Required  |
-| ------------- |:-------------------------:| ---------------------:|:---------:|
-| INTERVAL      | Time between runs in minutes | 2                  | No        |
-| THREADS       | Number of repos to process simultaneously | 10     | No        |
-| DRONE_URL     | Drone URL                 | NIL                   | Yes       |
-| DRONE_TOKEN   | Drone Token               | NIL                   | Yes       |
-| INFLUXDB_ADDRESS | Database address       | http://influxdb:8086 | No        |
-| INFLUXDB_USERNAME   | Database username   | foo                   | No        |
-| INFLUXDB_PASSWORD   | Database password   | bar                   | No        |
-| INFLUXDB_DATABASE   | Database name       | example               | No        |
+| Name             |                Description                | Default               | Required  |
+|------------------|:-----------------------------------------:| ---------------------:|:---------:|
+| INTERVAL         |       Time between runs in minutes        | 2                  | No        |
+| THREADS          | Number of repos to process simultaneously | 10     | No        |
+| DRONE_URL        |                 Drone URL                 | NIL                   | Yes       |
+| DRONE_TOKEN      |                Drone Token                | NIL                   | Yes       |
+| INFLUXDB_ADDRESS |             Database address              | http://influxdb:8086 | No        |
+| INFLUXDB_TOKEN   |              Database token               | foo                   | No        |
+| INFLUXDB_BUCKET  |                Bucket name                | example               | No        |
 
+## Kubernetes
+
+Copy `secret.yaml.example` to `secret.yaml`
+Fill the missing values in `secret.yaml` with base64 encoded values:
+
+```
+echo -n "PLACE_THE_SECRET_HERE" | base64
+```
+
+Remember to keep the `-n` so that you don't have a carriage return in your encoded secret.
+
+Connect with the correct cluster
+Create your name space:
+```
+kubectl create namespace drone-exporter
+```
+Create the secrets:
+```
+kubectl apply -f ci/secret.yaml
+```
+Create the deployment:
+```
+kubectl apply -f ci/deployment.yml
+```
